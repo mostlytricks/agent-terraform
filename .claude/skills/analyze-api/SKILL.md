@@ -6,7 +6,9 @@ description: Extract a normalized spec.yaml from a backend service's source code
 # analyze-api
 
 Produce `services/<name>/spec.yaml` conforming to `.gravity/spec/SPEC.md` from
-whatever sources exist for one service. Read `.gravity/spec/SPEC.md` first.
+whatever sources exist for one service. Read `.gravity/spec/SPEC.md` first;
+for a real internal service also load `.gravity/onboarding/SPEC.md` (binding
+rules + large-codebase strategy).
 
 ## Inputs to ask for (if not given)
 
