@@ -183,9 +183,10 @@ hand-written one-off wrappers, and a new service can be onboarded in under a day
   then <code>services/registry.yaml</code> (current state).</li>
   <li><strong>Open questions</strong> (answer through Phase 1, not upfront):
     <ul>
-      <li>Is one MCP server per service right, or will gravity want one gateway
-      per domain? The spec format supports either; don't decide until gravity's
-      mounting story is concrete.</li>
+      <li><s>Is one MCP server per service right, or will gravity want one
+      gateway per domain?</s> <em>Decided (Jul 2026): per-service MCP servers.
+      Revisit only if gravity's mounting story makes per-domain aggregation
+      clearly cheaper.</em></li>
       <li>How do yellow-compensations age — do they get removed when a team fixes
       the backend, and who notices?</li>
       <li>Where do generated skills get distributed — copied into gravity, or
