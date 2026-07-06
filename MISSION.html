@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-terraform — Mission &amp; Direction</title>
+<style>
+  :root {
+    --bg: #fdfcf9; --fg: #1e2126; --muted: #6b7280; --accent: #0f6b4f;
+    --card: #f2f0ea; --border: #ddd8cc; --warn: #9a6700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a; --fg: #e6e4de; --muted: #9aa0aa; --accent: #4fc79b;
+      --card: #1d2026; --border: #33373f; --warn: #d4a72c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.65 Georgia, 'Times New Roman', serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1, h2, h3, .label { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.2rem; margin: 48px 0 12px; padding-top: 20px; border-top: 1px solid var(--border); }
+  h3 { font-size: 1rem; margin: 24px 0 8px; }
+  .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 40px;
+          font-family: -apple-system, 'Segoe UI', sans-serif; }
+  .mission {
+    background: var(--card); border-left: 4px solid var(--accent);
+    padding: 20px 24px; margin: 24px 0; font-size: 1.15rem; border-radius: 0 8px 8px 0;
+  }
+  .label { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+           letter-spacing: 0.08em; color: var(--accent); margin-bottom: 4px; }
+  pre {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; overflow-x: auto; font: 0.82rem/1.5 ui-monospace, 'SF Mono', Consolas, monospace;
+  }
+  code { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 0.88em;
+         background: var(--card); padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0;
+          font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  .not { color: var(--muted); }
+  .warn { color: var(--warn); font-weight: 600; }
+  ul { padding-left: 22px; } li { margin: 6px 0; }
+  .principle b { font-family: -apple-system, 'Segoe UI', sans-serif; }
+  .footer { margin-top: 56px; color: var(--muted); font-size: 0.85rem;
+            font-family: -apple-system, 'Segoe UI', sans-serif; border-top: 1px solid var(--border); padding-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+
+<span class="label">Memo to future me</span>
+<h1>agent-terraform — Mission &amp; Direction</h1>
+<p class="meta">Started July 2026 · Living document — update when direction changes, not when code changes</p>
+
+<div class="mission">
+Make every internal API agent-consumable: analyze backend services from whatever
+exists (code, wiki, tribal knowledge), decide honestly whether an agent can use
+them safely, and generate the serving layer — MCP servers and Agent Skills —
+that lets agents do real work against them.
+</div>
+
+<h2>Why this exists</h2>
+<p>
+We have many internal web services. They work fine for humans and for other
+services, but they were never designed for agents: endpoints are too granular,
+descriptions say <em>what</em> but never <em>when</em>, errors assume a human
+developer is reading them, and nothing marks which operations are destructive.
+Pointing an agent at a raw API produces an agent that confidently does the
+wrong thing.
+</p>
+<p>
+Wrapping each API by hand doesn't scale and doesn't accumulate. What scales is a
+<strong>pipeline</strong>: extract a normalized spec once, score it, and generate
+every serving format from that one spec. When an API changes, re-analysis is a
+diff, not a redo. That's the "terraform" in the name — declarative input,
+agent-facing infrastructure out.
+</p>
+
+<h2>Where this fits: gravity and the domain picture</h2>
+<p>
+<strong>gravity (ai-workspace)</strong> is the agent workspace — it defines and
+manages <em>domains</em>: the bounded contexts agents operate in. agent-terraform
+is the supply line underneath it. For each domain gravity defines, this repo
+makes that domain's backend services consumable:
+</p>
+<pre><code>gravity (ai-workspace)          agent-terraform (this repo)
+─────────────────────           ───────────────────────────
+defines domains        ◄─────►  onboards each domain's services
+manages agents                  spec.yaml  → readiness gate
+consumes the layer     ◄──────  → MCP servers + Agent Skills</code></pre>
+<p>
+The contract between the two is the <strong>serving layer</strong>: gravity's
+agents mount the MCP servers and load the skills; they never see raw backends.
+When onboarding gravity's own services later, they go through the same pipeline
+as everything else — no special path.
+</p>
+
+<h2>What this project is — and is not</h2>
+<table>
+<tr><th>Is</th><th class="not">Is not</th></tr>
+<tr>
+  <td>A repeatable pipeline run interactively with Claude Code skills</td>
+  <td class="not">A fully automated CI converter (maybe later, not now)</td>
+</tr>
+<tr>
+  <td>An honest assessor — red APIs get a remediation list, not a wrapper</td>
+  <td class="not">A universal adapter that pretends every API is fine</td>
+</tr>
+<tr>
+  <td>A curator — tools are intents and workflows</td>
+  <td class="not">A 1:1 endpoint-to-tool mapper (OpenAPI converters exist already)</td>
+</tr>
+<tr>
+  <td>A registry that accumulates specs, scores and serving layers</td>
+  <td class="not">A runtime platform, gateway or auth broker — gravity's territory</td>
+</tr>
+</table>
+
+<h2>Principles (don't renegotiate these casually)</h2>
+<ul>
+  <li class="principle"><b>Spec in the middle.</b> One extraction front-end
+  (code + docs → <code>spec.yaml</code>), many generation back-ends. Every new
+  output format reads the spec; nothing reads the backend twice.</li>
+  <li class="principle"><b>Tools ≠ endpoints.</b> Workflows become single
+  server-side tools; destructive operations are annotated and confirm-gated.</li>
+  <li class="principle"><b>Readiness is a gate, not a report.</b>
+  Green generates. Yellow generates with documented compensations.
+  <span class="warn">Red stops</span> — the deliverable is the remediation list
+  for the owning team.</li>
+  <li class="principle"><b>Never guess.</b> Unknowns are recorded as
+  <code>gaps</code> in the spec and surface as "known unknowns" in generated
+  skills, so agents don't bluff through them.</li>
+  <li class="principle"><b>Secrets stay in env vars.</b> Specs and generated
+  code name variables; they never contain values.</li>
+</ul>
+
+<h2>Direction — phased, checkpoint at each phase</h2>
+<h3>Phase 1 — Prove the pipeline (now)</h3>
+<ul>
+  <li>Onboard the first real service end-to-end (candidate: a gravity/ai-workspace
+  service, or any small Python backend).</li>
+  <li>Expect to revise <code>docs/spec-format.md</code> and the rubric after the
+  first real contact — the format was designed on paper.</li>
+  <li>Done when: one service is green/yellow, its MCP server runs, and an agent
+  completes a real task through it.</li>
+</ul>
+<h3>Phase 2 — Onboard the domain(s)</h3>
+<ul>
+  <li>Work domain-by-domain as gravity defines them; onboard each domain's key
+  services (Python + Spring).</li>
+  <li>Registry becomes the source of truth for "what can agents touch, and how safely."</li>
+  <li>Feed remediation lists back to owning teams; track whether scores improve.</li>
+</ul>
+<h3>Phase 3 — Standard, maybe automation</h3>
+<ul>
+  <li>If the rubric holds up, promote it: "agent-consumable" becomes a definition
+  teams design against, not a score they receive.</li>
+  <li>Only then consider CI automation (re-analyze on service change). Automating
+  earlier would freeze a format that hasn't earned it.</li>
+</ul>
+
+<h2>Success at ~6–12 months</h2>
+<p>
+The key internal services are <strong>agent-ready</strong>: onboarded through the
+pipeline, scored green or yellow, and served via MCP + skills that gravity's
+agents actually use. Concretely: the registry lists them, none of them required
+hand-written one-off wrappers, and a new service can be onboarded in under a day.
+</p>
+
+<h2>Notes to future me</h2>
+<ul>
+  <li><strong>Resume point:</strong> open this repo in Claude Code, say
+  <code>onboard &lt;service&gt;, code at &lt;path&gt;, docs at &lt;path&gt;</code>.
+  The skills carry the process; this memo carries the intent.</li>
+  <li><strong>Read first:</strong> <code>docs/spec-format.md</code> (the contract),
+  then <code>services/registry.yaml</code> (current state).</li>
+  <li><strong>Open questions</strong> (answer through Phase 1, not upfront):
+    <ul>
+      <li>Is one MCP server per service right, or will gravity want one gateway
+      per domain? The spec format supports either; don't decide until gravity's
+      mounting story is concrete.</li>
+      <li>How do yellow-compensations age — do they get removed when a team fixes
+      the backend, and who notices?</li>
+      <li>Where do generated skills get distributed — copied into gravity, or
+      does gravity read this repo directly?</li>
+    </ul>
+  </li>
+  <li><strong>Guardrail:</strong> if you find yourself hand-editing a generated
+  server, stop — fix the spec or the generator skill instead. Hand edits are how
+  the pipeline dies.</li>
+</ul>
+
+<p class="footer">
+agent-terraform · MISSION.html · audience: future me · update the "Direction"
+section when a phase completes; update "Principles" only with a written reason.
+</p>
+
+</main>
+</body>
+</html>
