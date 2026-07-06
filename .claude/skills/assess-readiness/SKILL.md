@@ -5,7 +5,7 @@ description: Score a service's agent-readiness from its spec.yaml using the 8-di
 
 # assess-readiness
 
-Score `services/<name>/spec.yaml` against `docs/readiness-rubric.md` and
+Score `services/<name>/spec.yaml` against `.gravity/readiness/SPEC.md` and
 write `services/<name>/readiness.md`. Read the rubric first — the
 dimension definitions and the gate thresholds live there, not here.
 

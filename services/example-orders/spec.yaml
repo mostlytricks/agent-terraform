@@ -1,5 +1,5 @@
 # Worked example of the spec format (fictional service).
-# Reference: docs/spec-format.md. Delete once you have real services onboarded.
+# Reference: .gravity/spec/SPEC.md. Delete once you have real services onboarded.
 
 service:
   name: example-orders

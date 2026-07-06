@@ -5,8 +5,8 @@ description: Extract a normalized spec.yaml from a backend service's source code
 
 # analyze-api
 
-Produce `services/<name>/spec.yaml` conforming to `docs/spec-format.md` from
-whatever sources exist for one service. Read `docs/spec-format.md` first.
+Produce `services/<name>/spec.yaml` conforming to `.gravity/spec/SPEC.md` from
+whatever sources exist for one service. Read `.gravity/spec/SPEC.md` first.
 
 ## Inputs to ask for (if not given)
 

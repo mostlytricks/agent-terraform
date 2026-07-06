@@ -54,8 +54,9 @@ readiness gate. Each stage is also runnable standalone (`/analyze-api`,
 | Path | What |
 |---|---|
 | `.claude/skills/` | The pipeline skills |
-| `docs/spec-format.md` | The intermediate spec format (start here) |
-| `docs/readiness-rubric.md` | Scoring dimensions and the gate |
+| `.gravity/MISSION.html` | Why this exists, principles, phased direction |
+| `.gravity/spec/SPEC.md` | The intermediate spec format (start here) |
+| `.gravity/readiness/SPEC.md` | Scoring dimensions and the gate |
 | `services/registry.yaml` | All onboarded services and their state |
 | `services/<name>/` | Per-service `spec.yaml` + `readiness.md` |
 | `serving/mcp/<name>/` | Generated MCP servers (runnable, env-configured) |
