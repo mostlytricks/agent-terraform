@@ -6,15 +6,33 @@ Spec-driven pipeline that turns internal backend APIs into agent-consumable serv
 
 ---
 
-## Docs in this project
+> **gravity: v1.4** · _the version of the workspace gravity system this project adopted (ai-workspace root `VERSION` / `CHANGELOG.md`). Bump when you re-sync to a newer skeleton; `/triage` flags drift._
 
-- **CONTEXT.md** — start here: current state + the single next step. *Now.*
-- **CLAUDE.md** (this file) — stable identity: stack, run/test, entry points, gotchas. *How.*
-- **MISSION.html** — why it exists, principles, phased direction, decisions. *Why* (browser-read).
-- **docs/spec-format.md** — the intermediate `spec.yaml` contract between analysis and generation. Read before touching any skill.
-- **docs/readiness-rubric.md** — the 8-dimension scorecard and green/yellow/red gate.
+> **Docs live in `.gravity/`.** This `CLAUDE.md` (identity, *how*) and `CONTEXT.md` (*now*) stay at the project root and auto-load; `README.md` is the user guide. Everything else — the *why* and the contracts — is organized **by subject domain** under `.gravity/`. One concern, one home — link, don't restate.
 
-Precedence: CONTEXT (now) > CLAUDE (how) > MISSION (why).
+## Doc Map (`.gravity/`)
+
+```
+.gravity/
+  MISSION.html      # why — north star, principles, phases, decisions (browser-read)
+  spec/      SPEC.md   # the intermediate spec.yaml contract (analysis ↔ generation)
+  readiness/ SPEC.md   # the 8-dimension rubric + green/yellow/red gate
+```
+
+Precedence: CONTEXT (now) > CLAUDE (how) > SPECs (contracts) > MISSION (why).
+
+## What to read before a change (router)
+
+| If you're changing… | Read first | Human reference |
+|---|---|---|
+| `analyze-api` skill, `spec.yaml` fields, anything that writes or reads specs | `.gravity/spec/SPEC.md` | — |
+| `assess-readiness` skill, scoring, the gate, compensations | `.gravity/readiness/SPEC.md` | — |
+| `generate-mcp` / `generate-agent-skill`, `templates/mcp-server/` | `.gravity/spec/SPEC.md` (they consume it) | `.gravity/MISSION.html` (principles) |
+| Direction, phases, recorded decisions | `.gravity/MISSION.html` | — |
+
+## Adding a domain
+
+A domain earns a `.gravity/<domain>/` folder only when it has its own principle and rules an agent must respect (workspace CLAUDE.md §6 gate — see ai-workspace). Otherwise it's a slice under an existing domain. Wire every new folder into: this Doc Map, the router table above, and MISSION.html's "system in N domains" table.
 
 ## Stack
 
@@ -50,7 +68,7 @@ No test suite yet — generated servers are verified per `generate-mcp`'s verify
 ## Conventions
 
 - Commit style: imperative subject + short body explaining the why.
-- **Never hand-edit generated servers/skills** — fix the spec or the generator skill and regenerate. Hand edits are how the pipeline dies (MISSION.html guardrail).
+- **Never hand-edit generated servers/skills** — fix the spec or the generator skill and regenerate. Hand edits are how the pipeline dies (`.gravity/MISSION.html` guardrail).
 - Specs and generated code name env vars only; secrets never appear in the repo.
 - `services/registry.yaml` is updated by the pipeline skills, not by hand.
 - Unknowns go in a spec's `gaps:` list — never guessed.
@@ -59,12 +77,12 @@ No test suite yet — generated servers are verified per `generate-mcp`'s verify
 
 - The readiness gate is real: red services get a remediation list, **no serving layer**. Don't generate around it.
 - `services/example-orders/` is fictional — a spec-format reference. Delete once real services are onboarded.
-- One MCP server per service (decided 2026-07; see MISSION.html) — don't aggregate into per-domain gateways without revisiting that decision.
+- One MCP server per service (decided 2026-07; see `.gravity/MISSION.html`) — don't aggregate into per-domain gateways without revisiting that decision.
 
 ## Entry Points
 
 - `.claude/skills/onboard-service/SKILL.md` — the orchestrator; each stage skill is self-contained.
-- `docs/spec-format.md` — the contract everything else keys on; change it and every skill downstream is affected.
+- `.gravity/spec/SPEC.md` — the contract everything else keys on; change it and every skill downstream is affected.
 - `templates/mcp-server/` — structural reference the generator copies; change here to change all future servers.
 
 ## Git

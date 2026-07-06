@@ -141,12 +141,29 @@ as everything else — no special path.
   code name variables; they never contain values.</li>
 </ul>
 
+<h2>The system in 2 domains</h2>
+<table>
+<tr><th>Domain</th><th>Why</th><th>Principle</th><th>Non-goal</th></tr>
+<tr>
+  <td><code>spec</code></td>
+  <td>One normalized format decouples extraction from generation.</td>
+  <td>Spec in the middle; unknowns are <code>gaps</code>, never guesses.</td>
+  <td>Not OpenAPI — it captures when/why/safety, not just shapes.</td>
+</tr>
+<tr>
+  <td><code>readiness</code></td>
+  <td>An honest gate prevents wrapping APIs agents can't use safely.</td>
+  <td>Red stops; yellow generates with named compensations.</td>
+  <td>Not a quality score for humans — it measures agent-consumability only.</td>
+</tr>
+</table>
+
 <h2>Direction — phased, checkpoint at each phase</h2>
 <h3>Phase 1 — Prove the pipeline (now)</h3>
 <ul>
   <li>Onboard the first real service end-to-end (candidate: a gravity/ai-workspace
   service, or any small Python backend).</li>
-  <li>Expect to revise <code>docs/spec-format.md</code> and the rubric after the
+  <li>Expect to revise <code>.gravity/spec/SPEC.md</code> and the rubric after the
   first real contact — the format was designed on paper.</li>
   <li>Done when: one service is green/yellow, its MCP server runs, and an agent
   completes a real task through it.</li>
@@ -179,7 +196,7 @@ hand-written one-off wrappers, and a new service can be onboarded in under a day
   <li><strong>Resume point:</strong> open this repo in Claude Code, say
   <code>onboard &lt;service&gt;, code at &lt;path&gt;, docs at &lt;path&gt;</code>.
   The skills carry the process; this memo carries the intent.</li>
-  <li><strong>Read first:</strong> <code>docs/spec-format.md</code> (the contract),
+  <li><strong>Read first:</strong> <code>.gravity/spec/SPEC.md</code> (the contract),
   then <code>services/registry.yaml</code> (current state).</li>
   <li><strong>Open questions</strong> (answer through Phase 1, not upfront):
     <ul>
