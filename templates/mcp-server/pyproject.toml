@@ -1,0 +1,10 @@
+# Template: generated servers copy this, replacing SERVICE_NAME.
+[project]
+name = "mcp-SERVICE_NAME"
+version = "0.1.0"
+description = "Generated MCP server for SERVICE_NAME (agent-terraform)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.0",
+    "httpx>=0.27",
+]

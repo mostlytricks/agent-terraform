@@ -1,0 +1,19 @@
+# Registry of onboarded services. Maintained by the pipeline skills —
+# analyze-api, assess-readiness and the generators each update their fields.
+#
+# Row schema:
+#   <name>:
+#     status: analyzed | assessed | served
+#     readiness: green | yellow | red     # set by assess-readiness
+#     score: 0-16                          # set by assess-readiness
+#     spec: services/<name>/spec.yaml
+#     serving:
+#       mcp: serving/mcp/<name>            # set by generate-mcp
+#       skill: serving/skills/<name>       # set by generate-agent-skill
+#     owner: <team>
+
+services:
+  example-orders:
+    status: analyzed
+    spec: services/example-orders/spec.yaml
+    owner: team-commerce   # fictional worked example — see spec for format reference

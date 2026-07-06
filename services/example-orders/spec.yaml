@@ -1,0 +1,128 @@
+# Worked example of the spec format (fictional service).
+# Reference: docs/spec-format.md. Delete once you have real services onboarded.
+
+service:
+  name: example-orders
+  title: Order Management Service
+  description: >
+    Manages customer orders: lookup, search, cancellation and refunds. Use this
+    service whenever a task involves an order id (ORD-xxxxx) or a customer
+    asking about a purchase. It does not own payments or inventory.
+  base_url_env: ORDERS_BASE_URL
+  owner: team-commerce
+  sources:
+    - type: code
+      location: (fictional) orders-service/src/main/kotlin/.../OrderController.kt
+      analyzed_at: 2026-07-06
+    - type: docs
+      location: (fictional) wiki/Orders-API-Guide
+
+auth:
+  type: api_key
+  in: header
+  name: X-Api-Key
+  env: ORDERS_API_KEY
+  notes: Issued per consumer by team-commerce; read and write keys are separate.
+
+endpoints:
+  - id: get_order
+    method: GET
+    path: /api/v1/orders/{order_id}
+    expose: true
+    summary: Fetch a single order with line items and status.
+    when_to_use: >
+      Use when you have an order id and need current status, items or totals.
+      Do NOT use for searching — use search_orders instead.
+    safety: readonly
+    idempotent: true
+    params:
+      - name: order_id
+        in: path
+        type: string
+        required: true
+        description: Order id in the form ORD-xxxxx.
+        example: ORD-58201
+    response:
+      shape: |
+        { "id": "ORD-58201", "status": "SHIPPED",
+          "items": [{"sku": "K-100", "qty": 1, "price_cents": 4200}],
+          "total_cents": 4200 }
+      notes: status is one of PLACED|PAID|SHIPPED|DELIVERED|CANCELLED.
+    errors:
+      - status: 404
+        meaning: No order with that id — likely a typo or a different region.
+        agent_action: Report the id was not found; suggest search_orders.
+
+  - id: search_orders
+    method: GET
+    path: /api/v1/orders
+    expose: true
+    summary: Search orders by customer email or date range.
+    when_to_use: Use when you need to find orders without knowing an order id.
+    safety: readonly
+    idempotent: true
+    params:
+      - name: email
+        in: query
+        type: string
+        required: false
+        description: Exact customer email.
+      - name: placed_after
+        in: query
+        type: string
+        required: false
+        description: ISO date (YYYY-MM-DD), inclusive.
+    pagination:
+      style: cursor
+      params: {cursor: cursor, page_size: limit}
+    response:
+      shape: '{ "orders": [ ...get_order shape... ], "next_cursor": "..." }'
+
+  - id: cancel_order
+    method: POST
+    path: /api/v1/orders/{order_id}/cancel
+    expose: true
+    summary: Cancel an order that has not shipped.
+    when_to_use: >
+      Use only when the user explicitly asks to cancel and the order status is
+      PLACED or PAID. Shipped orders cannot be cancelled — offer a refund
+      workflow after delivery instead.
+    safety: destructive
+    idempotent: true
+    params:
+      - name: order_id
+        in: path
+        type: string
+        required: true
+        description: Order id in the form ORD-xxxxx.
+    errors:
+      - status: 409
+        meaning: Order already shipped or already cancelled.
+        agent_action: Re-fetch with get_order and explain the actual state to the user.
+
+  - id: healthz
+    method: GET
+    path: /healthz
+    expose: false
+    summary: Kubernetes liveness probe — not for agents.
+
+workflows:
+  - id: cancel_order_safely
+    summary: Cancel an order with pre- and post-verification.
+    when_to_use: Customer asks to cancel an order.
+    steps:
+      - endpoint: get_order
+        purpose: Verify status is PLACED or PAID before attempting.
+      - endpoint: cancel_order
+        purpose: Perform the cancellation (after user confirmation).
+      - endpoint: get_order
+        purpose: Confirm status is CANCELLED before reporting success.
+    failure_notes: >
+      A 409 between steps means the order shipped mid-flight — apologize and
+      explain the refund-after-delivery path instead.
+
+gaps:
+  - kind: missing_semantics
+    endpoint: search_orders
+    detail: Whether email matching is case-sensitive is undocumented.
+    blocking: false
