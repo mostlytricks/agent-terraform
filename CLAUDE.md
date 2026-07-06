@@ -15,8 +15,9 @@ Spec-driven pipeline that turns internal backend APIs into agent-consumable serv
 ```
 .gravity/
   MISSION.html      # why — north star, principles, phases, decisions (browser-read)
-  spec/      SPEC.md   # the intermediate spec.yaml contract (analysis ↔ generation)
-  readiness/ SPEC.md   # the 8-dimension rubric + green/yellow/red gate
+  spec/       SPEC.md   # the intermediate spec.yaml contract (analysis ↔ generation)
+  readiness/  SPEC.md   # the 8-dimension rubric + green/yellow/red gate
+  onboarding/ SPEC.md · PLAN.md   # running the pipeline on REAL internal services: rules + Phase 1 strategy
 ```
 
 Precedence: CONTEXT (now) > CLAUDE (how) > SPECs (contracts) > MISSION (why).
@@ -28,6 +29,7 @@ Precedence: CONTEXT (now) > CLAUDE (how) > SPECs (contracts) > MISSION (why).
 | `analyze-api` skill, `spec.yaml` fields, anything that writes or reads specs | `.gravity/spec/SPEC.md` | — |
 | `assess-readiness` skill, scoring, the gate, compensations | `.gravity/readiness/SPEC.md` | — |
 | `generate-mcp` / `generate-agent-skill`, `templates/mcp-server/` | `.gravity/spec/SPEC.md` (they consume it) | `.gravity/MISSION.html` (principles) |
+| **Onboarding a real internal service** (any environment/model) | `.gravity/onboarding/SPEC.md`, then its `PLAN.md` (pilot strategy + checklist) | — |
 | Direction, phases, recorded decisions | `.gravity/MISSION.html` | — |
 
 ## Adding a domain

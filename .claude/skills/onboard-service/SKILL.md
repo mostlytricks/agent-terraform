@@ -9,6 +9,10 @@ Orchestrate the pipeline end-to-end for one service. Each stage is its own
 skill — read and follow each one at its stage; this file only sequences
 them and defines the stop points.
 
+**Real internal service?** Read `.gravity/onboarding/SPEC.md` first (binding
+rules: no source code into this repo, no secrets in specs, gate is binding)
+and check its `PLAN.md` preparation checklist before starting.
+
 ## Stages
 
 1. **Analyze** — run `analyze-api`. Collect the inputs it needs (service
