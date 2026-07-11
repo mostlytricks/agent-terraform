@@ -6,7 +6,7 @@ Spec-driven pipeline that turns internal backend APIs into agent-consumable serv
 
 ---
 
-> **gravity: v1.4** · _the version of the workspace gravity system this project adopted (ai-workspace root `VERSION` / `CHANGELOG.md`). Bump when you re-sync to a newer skeleton; `/triage` flags drift._
+> **gravity: v1.8** · _the version of the workspace gravity system this project adopted (ai-workspace root `VERSION` / `CHANGELOG.md`). Bump when you re-sync to a newer skeleton; `/triage` flags drift._
 
 > **Docs live in `.gravity/`.** This `CLAUDE.md` (identity, *how*) and `CONTEXT.md` (*now*) stay at the project root and auto-load; `README.md` is the user guide. Everything else — the *why* and the contracts — is organized **by subject domain** under `.gravity/`. One concern, one home — link, don't restate.
 
