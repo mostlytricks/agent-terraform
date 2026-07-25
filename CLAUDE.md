@@ -6,35 +6,11 @@ Spec-driven pipeline that turns internal backend APIs into agent-consumable serv
 
 ---
 
-> **gravity: v1.8** · _the version of the workspace gravity system this project adopted (ai-workspace root `VERSION` / `CHANGELOG.md`). Bump when you re-sync to a newer skeleton; `/triage` flags drift._
-
-> **Docs live in `.gravity/`.** This `CLAUDE.md` (identity, *how*) and `CONTEXT.md` (*now*) stay at the project root and auto-load; `README.md` is the user guide. Everything else — the *why* and the contracts — is organized **by subject domain** under `.gravity/`. One concern, one home — link, don't restate.
-
-## Doc Map (`.gravity/`)
-
-```
-.gravity/
-  MISSION.html      # why — north star, principles, phases, decisions (browser-read)
-  spec/       SPEC.md   # the intermediate spec.yaml contract (analysis ↔ generation)
-  readiness/  SPEC.md   # the 8-dimension rubric + green/yellow/red gate
-  onboarding/ SPEC.md · PLAN.md   # running the pipeline on REAL internal services: rules + Phase 1 strategy
-```
-
-Precedence: CONTEXT (now) > CLAUDE (how) > SPECs (contracts) > MISSION (why).
-
-## What to read before a change (router)
-
-| If you're changing… | Read first | Human reference |
-|---|---|---|
-| `analyze-api` skill, `spec.yaml` fields, anything that writes or reads specs | `.gravity/spec/SPEC.md` | — |
-| `assess-readiness` skill, scoring, the gate, compensations | `.gravity/readiness/SPEC.md` | — |
-| `generate-mcp` / `generate-agent-skill`, `templates/mcp-server/` | `.gravity/spec/SPEC.md` (they consume it) | `.gravity/MISSION.html` (principles) |
-| **Onboarding a real internal service** (any environment/model) | `.gravity/onboarding/SPEC.md`, then its `PLAN.md` (pilot strategy + checklist) | — |
-| Direction, phases, recorded decisions | `.gravity/MISSION.html` | — |
-
-## Adding a domain
-
-A domain earns a `.gravity/<domain>/` folder only when it has its own principle and rules an agent must respect (workspace CLAUDE.md §6 gate — see ai-workspace). Otherwise it's a slice under an existing domain. Wire every new folder into: this Doc Map, the router table above, and MISSION.html's "system in N domains" table.
+<!-- gravity:router v3.2 — managed by /adopt-gravity + /sync-gravity; do not hand-edit inside the fences -->
+> **gravity: v3.2** — docs live in `.gravity/`. Before working here, read `.gravity/GRAVITY.md`
+> (the protocol: doc kinds + rates, navigation discipline) and `.gravity/ROUTER.md` (the Doc Map +
+> what to read before changing what). Session ritual: read `CONTEXT.md` first; update it before stopping.
+<!-- /gravity:router -->
 
 ## Stack
 
