@@ -6,8 +6,8 @@ Spec-driven pipeline that turns internal backend APIs into agent-consumable serv
 
 ---
 
-<!-- gravity:router v3.6 — managed by /adopt-gravity + /sync-gravity; do not hand-edit inside the fences -->
-> **gravity: v3.6** — docs live in `.gravity/`. Before working here, read `.gravity/GRAVITY.md`
+<!-- gravity:router v4.0 — managed by /adopt-gravity + /sync-gravity; do not hand-edit inside the fences -->
+> **gravity: v4.0** — docs live in `.gravity/`. Before working here, read `.gravity/GRAVITY.md`
 > (the protocol: doc kinds + rates, navigation discipline) and `.gravity/ROUTER.md` (the Doc Map +
 > what to read before changing what). Session ritual: read `CONTEXT.md` first; update it before stopping.
 <!-- /gravity:router -->
